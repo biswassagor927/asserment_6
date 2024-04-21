@@ -1,0 +1,62 @@
+{% load humanize %}
+{% load static %}
+
+<div class="row col-lg-12">
+
+    <div class="closePageCart">
+        <img src="{% static 'asset/images/icon/cross-mark.png' %}" alt="" onclick="pageCart('close')">
+    </div>
+
+    <div class="row col-lg-12 header">
+        <div class="col-lg-6 header-bar product">
+            <h3>Produk</h3>
+        </div>
+        <div class="col-lg-2 header-bar price">
+            <h3>Harga</h3>
+        </div>
+        <div class="col-lg-2 header-bar quantity">
+            <h3>Jumlah</h3>
+        </div>
+        <div class="col-lg-2 header-bar total">
+            <h3>Total</h3>
+        </div>
+    </div>
+
+    <div class="list" barang="{{barangCart | length}}">
+        {% for barang in barangCart %}
+        <div class="row col-lg-12 cart barang{{forloop.counter}}" cart="{{forloop.counter}}" onloadstart="cart('{{forloop.counter}}')">
+            <div class="col-lg-6 col-sm-12 content product">
+                <div class="row">
+                    <div class="col-lg-4 cover">
+                        <img src="/media/{{barang.cover}}" alt="" class="col-lg-12">
+                    </div>
+                    <div class="col-lg-8 name">
+                        <h6 class="barang" slugify="{{barang.slugify}}">{{barang.nama}}</h6>
+                        <h6 class="warna warna{{forloop.counter}}">{{barang.warna}}</h6>
+                        <h6 class="" onclick="removeBarangCart('{{barang.nama}}')">remove</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 content price">
+                <h6>Rp. <span id="price{{forloop.counter}}">{{barang.harga | intcomma}}</span></h6>
+            </div>
+            <div class="col-lg-2 content quantity">
+                <input type="number" name="quantity" id="quantity{{forloop.counter}}" value="{{barang.jumlah}}" onchange="if (this.value < 1) {this.value = 1} quantityCart(this.value, '{{forloop.counter}}')" min="1">
+            </div>
+            <div class="col-lg-2 content total">
+                <h6 id="totalPrice{{forloop.counter}}" harga="{{barang.hargaTotal}}">Rp. {{barang.hargaTotal | intcomma}}</h6>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="row col-lg-12 action">
+    <div class="row col-lg-6">
+        <button class="btn" onclick="if (getCookie('barang') != '') {cartBayar('{{request.user.username}}')}">Bayar</button>
+    </div>
+    <div class="row col-lg-6">
+        <h5 class="subtotal" id="subtotal" harga="{{totalHarga}}">Subtotal <span class="number">Rp. {{totalHarga | intcomma}}</span></h5>
+        <h5 class="message">Taxes and shipping calculated at checkout</h5>
+    </div>
+</div>

@@ -1,0 +1,207 @@
+<div class="row header">
+    <div class="row col-lg-12">
+        <h1 class="title">Three Laptop</h1>
+    </div>
+    <div class="row col-lg-12">
+        <h1 class="link"><a href="\" class="linkItem">Beranda</a> &nbsp;>&nbsp; {% if method == 'barang' %}<a href="/barang/{{ slugify }}" class="linkItem">Barang</a> &nbsp;>&nbsp;{% endif %}<a href="" class="linkItem active">Alamat</a> </h1>
+    </div>
+</div>
+
+<div class="row address leftBar2">
+    <div class="row col-lg-12">
+        <h1 class="title">Alamat</h1>
+    </div>
+    <form action="/ajax/saveTransaksi" method="post" id="formSaveTransaksi">
+        {% csrf_token %}
+        <div class="row col-lg-12">
+            <div class="row col-lg-12 data">
+                <h6 class="labelLabel">Label Alamat</h6>
+                <h1 class="label" id="label">{{ alamat.label }}</h1>
+            </div>
+            <div class="row col-lg-12 data">
+                <h6 class="labelNamaLengkap">Nama Lengkap</h6>
+                <h1 class="namaLengkap" id="namaLengkap">{{ alamat.namaLengkap }}</h1>
+            </div>
+            <div class="row col-lg-12 data">
+                <h6 class="labelAlamat">Provinsi / Kabupaten / Kecamatan</h6>
+                <h1 class="alamat" id="alamat">{{ alamat.provinsi }} / {{ alamat.kabupaten }} / {{ alamat.kecamatan }}</h1>
+            </div>
+            <div class="row col-lg-12 data">
+                <h6 class="labelKodePos">Kode Pos</h6>
+                <h1 class="kodePos" id="kodePos">{{ alamat.kodePos }}</h1>
+            </div>
+            <div class="row col-lg-12 data">
+                <h6 class="labelInformasiTambahan">Informasi Tambahan</h6>
+                <textarea name="" id="" class="informasiTambahan" disabled>{{ alamat.informasiTambahan }}</textarea>
+            </div>
+            <div class="row col-lg-12 data">
+                <div class="dropdown ekspedisi row col-lg-12">
+                    <button type="button" class="btn btn-sm btn-secondary dropdown-toggle buttonGroup buttonEkspedisi" id="dropdownMenuOffset" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="10,20">
+                        Ekspedisi
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
+                        
+                        {% for ekp in ekspedisi %}
+                            <a class="dropdown-item" onclick="ekspedisi('{{ekp | upper}}', '{{ekp}}');">{{ekp | upper}}</a>
+                        {% endfor %}
+                            
+                    </div>
+                </div>
+            </div>
+            <div class="row col-lg-12 data">
+                <div class="dropdown ekspedisi row col-lg-12">
+                    <button type="button" class="btn btn-sm btn-secondary dropdown-toggle buttonGroup buttonJenisPengiriman" id="dropdownMenuOffset" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="10,20" disabled>
+                        Jenis Pengiriman
+                    </button>
+                    <div class="dropdown-menu jenisEkspedisi" aria-labelledby="dropdownMenuOffset">
+                        
+                        {% for jne in jne %}
+                            <a class="dropdown-item jne" onclick="jenisPengiriman('{{ jne.1 }}', '{{jne.2}}')">{{ jne.0 }}</a>
+                        {% endfor %}
+                        
+                        {% for tiki in tiki %}
+                            <a class="dropdown-item tiki" onclick="jenisPengiriman('{{ tiki.1 }}', '{{tiki.2}}')">{{ tiki.0 }}</a>
+                        {% endfor %}
+
+                        {% for pos in pos %}
+                            <a class="dropdown-item pos" onclick="jenisPengiriman('{{ pos.1 }}', '{{pos.2}}')">{{ pos.0 }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="row col-lg-12 data">
+                <button class="btn bayar" type="submit">Lanjut ke Pembayaran</button>
+            </div>
+        </div>
+
+        <input type="hidden" name="barang" id="inputHiddenBarang">
+        <input type="hidden" name="harga" id="inputHiddenHarga">
+        <input type="hidden" name="ekspedisi" id="inputHiddenEkspedisi">
+        <input type="hidden" name="id_transaksi" id="inputHiddenId_transaksi" value="{{id_transaksi}}">
+        <input type="hidden" name="userAlamat" id="inputHiddenUserAlamat" value="{{ userAlamat }}">
+        {% csrf_token %}
+
+    </form>
+</div>
+
+<style>
+.leftBar2 .data h6,
+.leftBar2 .data h1{
+    background-color: #f4f4f4;
+    width: 90%;
+    margin: auto;
+}
+
+.leftBar2 .data h6{
+    padding: 5px;
+    font-size: 12px;
+    margin-top: 15px;
+}
+
+.leftBar2 .data h1{
+    font-size: 14px;
+    padding: 5px;
+    font-weight: bold;
+}
+
+.leftBar2 .data .kodePos{
+    letter-spacing: 5px;
+}
+
+.leftBar2 .data .labelLabel{
+    margin-top: 0px;
+}
+
+.leftBar2 .data .informasiTambahan{
+    width: 90%;
+    background-color: #f4f4f4;
+    height: 150px;
+    margin: auto;
+    border-color: #f4f4f4;
+    font-size: 14px;
+    padding: 5px;
+    font-weight: bold;
+}
+
+.leftBar2 .data .ekspedisi{
+    margin: auto;
+    margin-top: 15px;
+}
+
+.leftBar2 .data .ekspedisi .buttonEkspedisi,
+.leftBar2 .data .ekspedisi .buttonJenisPengiriman{
+    width: 90%;
+    margin: auto;
+}
+
+.leftBar2 .data .ekspedisi .buttonEkspedisi:focus,
+.leftBar2 .data .ekspedisi .buttonJenisPengiriman:focus{
+    box-shadow: none;
+}
+
+.leftBar2 .data .bayar{
+    position: absolute;
+    margin-top: 30px;
+    right: 0;
+    font-weight: bold;
+    font-size: 14px;
+    border-color: #313131;
+    color: #313131;
+    border-radius: 0;
+}
+
+.dropdown-menu{
+    background-color: white;
+    color: #313131;
+    border-radius: 0;
+    border-color: #313131;
+}
+
+.dropdown-menu a{
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+.dropdown-menu a:hover{
+    background-color: #313131;
+    color: white !important;
+}
+
+.dropdown-menu a:focus{
+    background-color: #313131;
+    color: white !important;
+}
+
+textarea:disabled{
+    color: #313131;
+}
+</style>
+
+<script>
+$('#formSaveTransaksi').submit(function (elems) {
+    elems.preventDefault()
+
+    $('#inputHiddenHarga').val($('#total').text())
+    $('#inputHiddenBarang').val(xendit('{{method}}', '{{ jumlahBarang }}', action = 'getBarang'))
+    let jenisPengiriman = $('.ekspedisi .buttonJenisPengiriman').html().replace('$nbsp;', '')
+    $('#inputHiddenEkspedisi').val($('.ekspedisi .buttonEkspedisi').html().replace('$nbsp;', '') + ' - ' + jenisPengiriman)
+
+    $.ajax({
+        url: '/ajax/saveTransaksi',
+        type: 'POST',
+        data: {
+            'csrfmiddlewaretoken'   : $('input[name="csrfmiddlewaretoken"]').val(),
+            'barang'                : $('#inputHiddenBarang').val(),
+            'harga'                 : $('#inputHiddenHarga').val(),
+            'ekspedisi'             : $('#inputHiddenEkspedisi').val(),
+            'id_transaksi'          : $('#inputHiddenId_transaksi').val(),
+            'userAlamat'            : $('#inputHiddenUserAlamat').val(),
+            'detailHarga'           : '{0} - {1} - {2}'.format($('#inputHiddenBarang').val(), 'Harga Pengiriman: ' + $('#hargaPengiriman').text(), xendit('{{method}}', '{{ jumlahBarang }}', action = 'getHarga'))
+        },
+        success: function (params) {
+            
+        }
+    })
+    xendit('{{method}}', '{{ jumlahBarang }}')
+})
+</script>

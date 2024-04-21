@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% load custom_filter %}
+
+{% block title %}
+    <title>Alamat</title>
+{% endblock title %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'asset/css/address/style.css' %}">    
+{% endblock style %}
+
+{% block body %}
+    <div class="screenBlank"></div>
+
+    <img src="{% static 'asset/images/gif/loading-rolling.gif' %}" alt="" class="loading">
+
+    <div class="container textBox">
+        <div class="row col-lg-12">
+            <h1 class="text">Proses Pembayaran Sudah Siap Anda Akan Segera di Alihkan Ke Halaman Pembayaran</h1>
+            <button class="btn">Menuju Halaman Pembayaran</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 leftBar" id="leftBar">
+                {% include 'address/leftBar.html' %}
+            </div>
+
+            <div class="col-lg-6 rightBar">
+                <div class="row">
+                    <div class="row col-lg-12 listBarang">
+                        
+                        {% if method == 'barang' %}
+                            <div class="row barang col-lg-12">
+                                <div class="col-lg-3 cover">
+                                    <img src="/media/{{barang.image1}}" alt="">
+                                </div>
+                                <div class="col-lg-6 data">
+                                    <h1 class="title row">{{barang.nama}}</h1>
+                                    <h1 class="warna row">{{request.GET.color}}</h1>
+                                </div>
+                                <div class="col-lg-3 angka">
+                                    <h1 class="harga row">Rp. {% if method == 'barang' %}{{hargaTotal | intcomma}}{% endif %}</h1>
+                                    <h1 class="quantity row">Jumlah: {{request.GET.quantity}}</h1>
+                                </div>
+                            </div>
+                        {% else %}
+                            
+                            {% for barang,quantity in barang %}
+                                <div class="row barang barang{{forloop.counter}} col-lg-12">
+                                    <div class="col-lg-3 cover">
+                                        <img src="/media/{{barang.image1}}" alt="">
+                                    </div>
+                                    <div class="col-lg-6 data">
+                                        <h1 class="title row">{{barang.nama}}</h1>
+                                        <h1 class="warna row">{{request.GET.color | splitSpace:forloop.counter }}</h1>
+                                    </div>
+                                    <div class="col-lg-3 angka">
+                                        <h1 class="harga row">Rp. {{ barang.harga | parse:"int" | mathMultiplication:quantity | intcomma }}</h1>
+                                        <h1 class="quantity row">Jumlah: {{ quantity }}</h1>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                                
+                        {% endif %}
+                            
+                    </div>
+                    <div class="row col-lg-12 calculate">
+                        <div class="row col-lg-12 barang">
+                            <h1 class="col-lg-6">Total Harga Barang </h1>
+                            <h1 class="col-lg-6" id="totalHargaBarang">Rp. {{hargaTotal | intcomma}}</h1>
+                        </div>
+                        <div class="row col-lg-12 pengiriman">
+                            <h1 class="col-lg-6">Harga Pengiriman</h1>
+                            <h1 class="col-lg-6" id="hargaPengiriman">Dihitung Nanti</h1>
+                        </div>
+                    </div>
+                    <div class="row col-lg-12 total">
+                        <div class="col-lg-6">
+                            <h1 class="label">Total</h1>
+                        </div>
+                        <div class="col-lg-6">
+                            <h1 class="jumlah" id="total">Rp. {{hargaTotal | intcomma}}</h1>
+                        </div>
+                    </div>
+                </div>
+                    
+            </div>
+        </div>
+    </div>
+{% endblock body %}
+
+{% block script %}
+    <script src="{% static 'asset/js/address/ajax.js' %}"></script>
+    <script src="{% static 'asset/js/address/function.js' %}"></script>
+    <script src="{% static 'asset/js/address/script.js' %}"></script>
+{% endblock script %}
+    

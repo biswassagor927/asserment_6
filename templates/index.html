@@ -1,0 +1,363 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+    <title>Three Laptop</title>
+{% endblock title %}
+    
+{% block style %}
+    <link rel="stylesheet" href="{% static 'asset/css/style.css' %}">
+{% endblock style %}
+
+{% block body %}
+    <div class="screenBlank"></div>
+
+    <div class="container aboutPage">
+        <div class="row col-lg-12 header">
+            <h1 class="title">Tentang Kami Three Laptop</h1>
+            <img src="{% static 'asset/images/icon/cross-mark.png' %}" alt="" class="iconClose">
+        </div>
+        <div class="row col-lg-12 content">
+            <h1 class="text">
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
+                when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
+                It has survived not only five centuries, but also the leap into electronic typesetting, 
+                remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
+                and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+            </h1>
+        </div>
+        <div class="row col-lg-12 button">
+            <button class="btn" onclick="tentangKami('hidden')">Kembali ke Halaman</button>
+        </div>
+    </div>
+
+    <div class="container cartPage shadow-lg">
+        {% include "cart.html" %}
+    </div>
+
+    <div class="container pageProfile" style="overflow: auto;">
+        {% include 'user/profile.html' %}
+    </div>
+
+    <div class="container login-register">
+        <div class="login" id="loginPage">
+            <form action="/ajax/login" method="POST" id="form-login">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <div class="cancel" id="buttonCloseLoginRegister" onclick="pageLogin_Register('close'); screenBlank('close')">
+                            <img src="{% static 'asset/images/icon/cross-mark.png' %}" alt="">
+                        </div>
+                        <div class="btn-group buttonSelect" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-lg btn-secondary login active">Login</button>
+                            <button type="button" class="btn btn-lg btn-secondary register" onclick="showLogin_Register('register')">Register</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        {% csrf_token %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group input username">
+                            <input class="form-control" type="text" placeholder="Username" name="username">
+                            <div class="borderBottom"></div>
+                            <small id="emailHelp" class="form-text">Tolong masukkan username dari akun yang anda miliki</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group input password">
+                            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
+                            <div class="borderBottom"></div>
+                            <small id="passwordHelp" class="form-text">Masukkan password yang sesuai dengan username anda</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 col-sm-12 buttonLoginRegister">
+                        <div class="borderTop"></div>
+                        <div class="borderLeft"></div>
+                        <button class="btn button" type="submit">Kirim</button>
+                        <div class="borderBottom"></div>
+                        <div class="borderRight"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <div class="register" id="registerPage">
+            <form action="/ajax/register" enctype="multipart/form-data" id="form-register" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <div class="cancel" id="buttonCloseLoginRegister" onclick="pageLogin_Register('close'); screenBlank('close')">
+                            <img src="{% static 'asset/images/icon/cross-mark.png' %}" alt="">
+                        </div>
+                        <div class="btn-group buttonSelect" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-lg btn-secondary login" onclick="showLogin_Register('login')">Login</button>
+                            <button type="button" class="btn btn-lg btn-secondary register active">Register</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row fullname">
+                    <div class="col-md-6">
+                        <div class="form-group input fullName">
+                            {{registerForm.fullname}}
+                            <div class="borderBottom"></div>
+                            <small class="form-text">Masukkan Nama Lengkap anda </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group input username">
+                            {{registerForm.username}}
+                            <div class="borderBottom"></div>
+                            <small class="form-text">Masukkan username yang anda inginkan</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group input email">
+                            {{registerForm.email}}
+                            <div class="borderBottom"></div>
+                            <small class="form-text">Masukkan email yang anda gunakan</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group input password">
+                            {{registerForm.password}}
+                            <div class="borderBottom"></div>
+                            <small class="form-text">Masukkan password yang nada inginkan dan jaga baik-baik</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group input divProfile">
+                            {{registerForm.profile}}
+                            <div class="borderBottom"></div>
+                            <small class="form-text">Masukkan foto / gambar yang anda inginkan</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 col-sm-12 buttonLoginRegister">
+                        <div class="borderTop"></div>
+                        <div class="borderLeft"></div>
+                        <button class="btn button" onclick="" type="submit">Kirim</button>
+                        <div class="borderBottom"></div>
+                        <div class="borderRight"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="row">
+            <div class="col-md-10 otherChoice">
+                <small id="emailHelp" class="form-text text-muted">Or Login Using</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="container header">
+        <div class="row col-lg-12 header1">
+            
+            {% block search %}
+                <div class="searchBar col-lg-6">
+                    <img src="{% static 'asset/images/icon/search.png' %}" alt="" class="iconSeacrh" onclick="if ($('#inputSearch').val() == '') {$('#inputSearch').focus();} else {search($('#inputSearch').val());}">
+                    <input class="form-control search" type="search" id="inputSearch" placeholder="Pencarian" aria-label="Search" spellcheck="false">
+                </div>
+            {% endblock search %}
+            
+            <div class="cart col-lg-6 col-sm-12">
+                <div class="dropdown button">
+                    <h1 class="dropdown-toggle buttonMain" id="dropdownMenuOffset" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="10,20">
+                        User
+                    </h1>
+                    <div class="dropdown-menu userBar" aria-labelledby="dropdownMenuOffset">
+                        {% if user.is_authenticated %}
+                            {% include 'user.html' %}
+                        {% else %}
+                            <a class="dropdown-item login" onclick="showLogin_Register('login')">Login</a>
+                            <a class="dropdown-item register" onclick="showLogin_Register('register')">Register</a>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <h6 class="checkOut" onclick="pageCart('show');">Bayar</h6>
+                <h6 class="cartText cart" onclick="pageCart('show');">Keranjang [ <span id="numberCart">0</span> ]</h6>
+                <img class="iconCart cart" onclick="pageCart('show');" src="{% static 'asset/images/icon/cart.png' %}" alt="" onclick="checkCookie('barang')">
+            </div>
+        </div>
+        <div class="row header2 col-lg-12 col-sm-12">
+            <h1 class="title" onclick="window.location.href = '/'" style="cursor: pointer;">Three Laptop</h1>
+            <!-- checkCookie('barang') -->
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-sm-12 body1">
+                
+                {% for brand in allBrand %}
+                <div class="row">
+                    <h3 class="select select{{forloop.counter}}">{{brand}}</h3>
+                </div>
+                {% endfor %}
+
+                <div class="row">
+                    <div class="select selectMediaSocial">
+                        <div class="row col-lg-10">
+                            <div class="col-lg-2 col-sm-2 icon">
+                                <img src="{% static 'asset/images/icon/social-media/whatsapp.svg' %}" alt="">
+                            </div>
+                            <div class="col-lg-2 col-sm-2 icon">
+                                <img src="{% static 'asset/images/icon/social-media/facebook.svg' %}" alt="">
+                            </div>
+                            <div class="col-lg-2 col-sm-2 icon">
+                                <img src="{% static 'asset/images/icon/social-media/instagram.svg' %}" alt="">
+                            </div>
+                            <div class="col-lg-2 col-sm-2 icon">
+                                <img src="{% static 'asset/images/icon/social-media/telegram.svg' %}" alt="">
+                            </div>
+                            <div class="col-lg-2 col-sm-2 icon">
+                                <img src="{% static 'asset/images/icon/social-media/twitter.svg' %}" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    
+            </div>
+            
+            {% block body2 %}
+            <div class="col-lg-9 col-sm-12 body2">
+                <div class="row header">
+                    <h3 class="titleLeft">{% if 'search' in request.GET %}Hasil Pencarian {{request.GET.search}}{% else %}Produk Terbaru{% endif %}</h3>
+                    <div class="dropdown buttonRight">
+                        <button type="button" class="btn btn-secondary dropdown-toggle buttonMain sort" id="dropdownMenuOffset" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="10,20">
+                            
+                            {% if 'search' in request.GET %}
+                                Urutkan
+                            {% else %}
+                                Terbaru
+                            {% endif %}
+                                
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
+                            <a class="dropdown-item" href="#" onclick="sortBarang('barangTerbaru'); $('.body2 .header .sort').html('Terbaru&nbsp')">Terbaru</a>
+                            <a class="dropdown-item" href="#" onclick="sortBarang('barangMurah'); $('.body2 .header .sort').html('Harga Rendah ke Tinggi&nbsp')">Harga Rendah ke Tinggi</a>
+                            <a class="dropdown-item" href="#" onclick="sortBarang('barangMahal'); $('.body2 .header .sort').html('Harga Tinggi ke Rendah&nbsp')">Harga Tinggi ke Rendah</a>
+                            <a class="dropdown-item" href="#" onclick="sortBarang('barangAZ'); $('.body2 .header .sort').html('Nama A -> Z&nbsp')">Nama A -> Z</a>
+                            <a class="dropdown-item" href="#" onclick="sortBarang('barangZA'); $('.body2 .header .sort').html('Nama Z -> A&nbsp')">Nama Z -> A</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row listBarang">
+                    {% include 'listBarang.html' %}
+                </div>
+                <div class="type sample">
+                    <div class="row">
+                        <h3>Kualitas Terbaik</h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 col-sm-3 sampleLaptop">
+                            <img src="{% static 'asset/images/gaming.png' %}" alt="">
+                        </div>
+                        <div class="col-sm-4 col-sm-3 sampleLaptop">
+                            <img src="{% static 'asset/images/general.png' %}" alt="">
+                        </div>
+                        <div class="col-sm-4 col-sm-3 sampleLaptop">
+                            <img src="{% static 'asset/images/graphic-design.png' %}" alt="">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 col-sm-3 sampleLaptop">
+                            <img src="{% static 'asset/images/hybrid.png' %}" alt="">
+                        </div>
+                        <div class="col-sm-4 col-sm-3 sampleLaptop">
+                            <img src="{% static 'asset/images/ultrabook.png' %}" alt="">
+                        </div>
+                        <div class="col-sm-4 col-sm-3 sampleLaptop">
+                            <img src="{% static 'asset/images/netbook.png' %}" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endblock body2 %}
+                
+        </div>
+    </div>
+
+    <div class="container footer">
+        <div class="row">
+            <div class="col-md-6 col-sm-12 body1">
+                <div class="row ">
+                    <h4 class="title">Lain lain</h4>
+                </div>
+                <div class="row ">
+                    <h4 class="footerLink" onclick="toSearch()">Pencarian</h4>
+                </div>
+                <div class="row ">
+                    <h4 class="footerLink" onclick="$('#inputSubscribe').focus()">Berita Terbaru</h4>
+                </div>
+                <div class="row ">
+                    <h4 class="footerLink" onclick="tentangKami('visible')">Tentang Kami</h4>
+                </div>
+                <div class="row ">
+                    <h4 class="footerLink" onclick='window.open("https\:\/\/mail.google.com/mail/?view=cm&fs=1&to=jusles363@gmail.com&su=Tanya dong Three Laptop!", "_blank")'>Pertanyaan</h4>
+                </div>
+                <div class="row ">
+                    <h4 class="footerLink" onclick="window.scrollTo({top: 280, behavior: 'smooth'});">Contact</h4>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-sm-12 body2">
+                <div class="row">
+                    <h4 class="title">Berita Terbaru</h4>
+                    <h6 class="text">Segera berlangganan, agar mendapatkan berita terbaru dari kami!</h6>
+                    <div class="input-group inputSubscribe">
+                        <input type="email" class="form-control" id="inputSubscribe" placeholder="email@kamu.com" aria-label="email" aria-describedby="button-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary button" type="button" id="button-addon2" onclick="ajaxSubscribe($('#inputSubscribe').val());">Berlangganan</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row footer2 col-lg-12 col-sm-12">
+            <div class="col-lg-6 col-sm-12">
+                <h6 class="copyright">Copyright © 2019, Three Laptop. E-Commerce Software by Three Laptop</h6>
+            </div>
+
+            <div class="col-lg-6 col-sm-12">
+                <div class="partner">
+                    <img src="" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}
+
+{% block script %}
+    <script src="{% static 'asset/js/ajax.js' %}"></script>
+    <script src="{% static 'asset/js/function.js' %}"></script>
+    <script src="{% static 'asset/js/script.js' %}"></script>
+    
+    {% if user.is_authenticated == False %}
+        <script>
+            showLogin_Register('login');
+            screenBlank('show');
+        </script>
+    {% endif %}
+        
+{% endblock script %}

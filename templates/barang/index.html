@@ -1,0 +1,138 @@
+{% extends "index.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+    <title>{{barang.nama}}</title>
+{% endblock title %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'asset/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'asset/css/barang/style.css' %}">
+{% endblock style %}
+
+{% block search %}
+    <div class="searchBar col-lg-6">
+        <img src="{% static 'asset/images/icon/search.png' %}" alt="" class="iconSeacrh" onclick="window.location.href = '/?search=' + $('#inputSearch').val()">
+        <input class="form-control search" type="search" id="inputSearch" placeholder="Pencarian" aria-label="Search" spellcheck="false">
+    </div>
+{% endblock search %}
+
+{% block body2 %}
+<div class="col-lg-9 col-sm-12 body2">
+    <div class="row link">
+        <h6><a href="/">Home</a> &nbsp;&nbsp;>&nbsp;&nbsp; <a href="/barang/{{barang.slugifyBarang}}">{{barang.nama}}</a></h6>
+    </div>
+    <div class="row barang">
+        <div class="col-lg-6 leftBar">
+            <div class="row displayImage">
+                <img src="/media/{{barang.image1}}" alt="" class="col-lg-12">
+            </div>
+            <div class="row">
+                <div class="col-lg-6 image2 col-sm-6">
+                    {% if barang.image2 == "" %}
+                        <img src="/media/{{barang.image1}}" alt="" class="imageChild1">
+                    {% else %}
+                        <img src="/media/{{barang.image2}}" alt="" class="imageChild1">
+                    {% endif %}
+                </div>
+                <div class="col-lg-6 image3 col-sm-6">
+                    {% if barang.image3 == "" %}
+                        <img src="/media/{{barang.image1}}" alt="" class="imageChild1">
+                    {% else %}
+                        <img src="/media/{{barang.image3}}" alt="" class="imageChild1">
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 image4 col-sm-6">
+                    {% if barang.image4 == "" %}
+                        <img src="/media/{{barang.image1}}" alt="" class="imageChild1">
+                    {% else %}
+                        <img src="/media/{{barang.image4}}" alt="" class="imageChild1">
+                    {% endif %}
+                </div>
+                <div class="col-lg-6 image5 col-sm-6">
+                    {% if barang.image5 == "" %}
+                        <img src="/media/{{barang.image1}}" alt="" class="imageChild1">
+                    {% else %}
+                        <img src="/media/{{barang.image5}}" alt="" class="imageChild1">
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 rightBar">
+            <div class="row">
+                <h1 class="title">{{barang.nama}}</h1>
+            </div>
+            <div class="row">
+                <h1 class="price">Rp. {{barang.harga | intcomma}}</h1>
+            </div>
+            <div class="row">
+                <input type="number" name="" id="quantity" class="quantity" value="1" min="1">
+                <div class="dropdown buttonColor">
+                    <button color="{% if warnaLength is not 1 %}random{% else %}{{warna.0}}{% endif %}" type="button" class="btn btn-secondary {% if warnaLength is not 1 %} dropdown-toggle {% else %} clearHover {% endif %} buttonMain rounded-0" id="buttonColor" {% if warnaLength is not 1 %} data-toggle="dropdown" {% endif %} aria-haspopup="true" aria-expanded="false" data-offset="10,20">
+                        {% if warnaLength is not 1 %}
+                            Warna
+                        {% else %}
+                            {{warna.0}}
+                        {% endif %}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
+                        {% for color in warna %}
+                            <a class="dropdown-item">{{color}}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <button class="btn button1 button" onclick="addBarangCart('{{barang.nama}}', 'random', parseInt($('#quantity').val()));">Tambahkan ke Keranjang</button>
+            </div>
+            <div class="row">
+                <button {% if user.is_authenticated %}onclick="buy('')"{% else %}onclick="showLogin_Register('login')"{% endif %} class="btn button2 button" id="buttonBuy" href="/address/{{user.username}}/barang?barang={{barang.slugifyBarang}}">Beli Sekarang</button>
+            </div>
+            <div class="row share">
+                
+            </div>
+        </div>
+        <div class="row col-lg-12">
+            <textarea name="" id="" class="deskripsi  {% if lineDeskripsi > 22 %}deskripsi-lg {% elif lineDeskripsi < 13 %}deskripsi-sm{% endif %}">{{barang.deskripsi}}</textarea>
+        </div>
+    </div>
+    <div class="row similar">
+        <h5 class="title">You might also like</h5>
+        <div class="row">
+            
+            {% for barang in barangSimilar %}
+                <a href="/barang/{{barang.slugifyBarang}}" class="col-lg-4 col-sm-12 barang">
+                    <img src="/media/{{barang.image1}}" alt="" class="col-lg-12">
+                    <div class="row">
+                        <h6 class="title">{{barang.nama}}</h6>
+                    </div>
+                    <div class="row">
+                        <h6 class="price">Rp. {{barang.harga | intcomma}}</h6>
+                    </div>
+                </a>
+            {% endfor %}
+                
+        </div>
+    </div>
+</div>
+{% endblock body2 %}
+    
+{% block script %}
+    <script src="{% static 'asset/js/ajax.js' %}"></script>
+    <script src="{% static 'asset/js/function.js' %}"></script>
+    <script src="{% static 'asset/js/script.js' %}"></script>
+
+    {% if user.is_authenticated == False %}
+        <script>
+            showLogin_Register('login');
+            screenBlank('show');
+        </script>
+    {% endif %}
+
+    <script src="{% static 'asset/js/barang/ajax.js' %}"></script>
+    <script src="{% static 'asset/js/barang/function.js' %}"></script>
+    <script src="{% static 'asset/js/barang/script.js' %}"></script>
+{% endblock script %}
